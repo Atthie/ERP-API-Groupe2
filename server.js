@@ -4,7 +4,7 @@ import passport from 'passport';
 const  app = express();
 import inscription from './routes/RouteInscription.js'
 import connexion from './routes/RouteConnexion.js'
-import inscriptionEM from './routes/RouteInscriptionEM.js'
+import inscriptionEM from './routes/RouteInvitationEM.js'
 
 import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
