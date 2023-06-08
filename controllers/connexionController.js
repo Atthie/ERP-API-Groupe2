@@ -1,7 +1,6 @@
 import User from "../models/users.js";
 import bcrypt from "bcrypt";
 import validator from "validator";
-
 export const connexionController = async (req, res) => {
   try {
     const { username, pwd} = req.body;

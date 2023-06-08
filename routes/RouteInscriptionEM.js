@@ -1,5 +1,5 @@
 import express from "express";
-import { inscriptionController } from "../controllers/entrepriseVendeurController.js";
+import { inscriptionEMController } from "../controllers/entrepriseVendeurController.js";
 
 const router = express.Router();
 

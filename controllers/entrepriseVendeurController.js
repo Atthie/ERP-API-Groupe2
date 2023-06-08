@@ -1,4 +1,4 @@
-import Entreprise from "../models/entreprises.js";
+import Entreprise from "../models/entreprisesVendeur.js";
 import validator from 'validator';
 import User from "../models/users.js";
 import transporter from "../config/emailConfig.js";
