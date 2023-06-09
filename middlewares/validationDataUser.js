@@ -1,9 +1,12 @@
 import validator from 'validator';
 
-export const validationDataUser = (req, res, next) => {
-  const { username, idEntreprise, pwd, pwdConfirm, telephone, email } = req.body;
+const validationDataUser = (req, res, next) => {
+  const { username, role, idEntreprise, pwd, pwdConfirm, telephone, email } = req.body;
 
   if (validator.isEmpty(username)) {
+    return res.status(400).json({ error: "Le champ 'nom d'utilisateur' est requis." });
+  }
+  if (validator.isEmpty(role)) {
     return res.status(400).json({ error: "Le champ 'nom d'utilisateur' est requis." });
   }
   if (validator.isEmpty(idEntreprise)) {
@@ -30,3 +33,4 @@ export const validationDataUser = (req, res, next) => {
 
   next();
 };
+export default validationDataUser;
