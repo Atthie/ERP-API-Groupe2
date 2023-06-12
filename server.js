@@ -4,8 +4,10 @@ import passport from 'passport';
 const  app = express();
 import inscription from './routes/RouteInscription.js'
 import connexion from './routes/RouteConnexion.js'
+import inscriptionEM from './routes/RouteInvitationEM.js'
+import user from './routes/RouteUser.js'
 
-import Entreprise from "./models/entreprisesVendeur.js";
+import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
 
 app.use(express.urlencoded({ extended: true }));
@@ -14,6 +16,10 @@ app.use(cors())
 app.use(passport.initialize());
 
 app.use('/inscription',inscription);
+app.use('/inscriptionEM',inscriptionEM);
+app.use('/user',user);
+
+
 app.use('/connexion',connexion);
 await User.sync();
 await Entreprise.sync();

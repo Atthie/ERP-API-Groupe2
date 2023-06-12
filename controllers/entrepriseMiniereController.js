@@ -1,12 +1,11 @@
 import Entreprise from "../models/entreprises.js";
 import validator from 'validator';
-import User from "../models/users.js";
 import transporter from "../config/emailConfig.js";
 import bcrypt from 'bcrypt';
 
-export const inscriptionController = async (req, res) => {
+export const inscriptionEMController = async (req, res) => {
   try {
-    const { nom, logo,description, email } = req.body;
+    const { nom, description, email, telephone } = req.body;
     // Validation des données
     if (validator.isEmpty(nom)) {
       return res.status(400).json({ error: "Le champ 'nom' est requis." });
@@ -14,8 +13,12 @@ export const inscriptionController = async (req, res) => {
     if (validator.isEmpty(description)) {
       return res.status(400).json({ error: "Le champ 'description' est requis." });
     }
-   
-   
+    if (validator.isEmpty(telephone)) {
+      return res.status(400).json({ error: "Le champ 'telephone' est requis." });
+    }
+    if (validator.isEmpty(email)) {
+      return res.status(400).json({ error: "Le champ 'email' est requis." });
+    }
     if (!validator.isEmail(email)) {
       return res.status(400).json({ error: "L'adresse e-mail est invalide." });
     }
@@ -32,27 +35,17 @@ export const inscriptionController = async (req, res) => {
       nom,
       description,
       email,
-
+      telephone
     });
 
-    // Création de l'utilisateur de l'entreprise avec mot de passe crypté
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash("Erp@2023", saltRounds);
-    const newUser = await User.create({
-      username: newEntreprise.email,
-      idEntreprise: newEntreprise.id,
-      pwd: hashedPassword,
-      email: "",
-      telephone: "",
-      role: "Vendeur"
-    });
-
-    // Envoi d'un e-mail à l'entreprise avec les informations de connexion de l'utilisateur
+    // Envoi d'un e-mail à l'entreprise Miniere avec le lien de l inscription 
+    
+    const hashedId = await bcrypt.hash(String(newEntreprise.id), 10);
     const mailOptions = {
       from: 'atthiemn@gmail',
       to: newEntreprise.email,
-      subject: 'Informations de connexion',
-      text: `Bonjour ${newEntreprise.nom},\n\nVoici les informations de connexion pour votre utilisateur :\n\nNom d'utilisateur : ${newUser.username}\nMot de passe : Erp@2023\n\nCordialement,`,
+      subject: 'Invitation d inscription',
+      text: `Bonjour ${newEntreprise.nom}, voici votre lien d'inscription :  http://192.168.0.105:3001/${hashedId}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -64,8 +57,7 @@ export const inscriptionController = async (req, res) => {
     });
     // Fin de l'envoi de l'e-mail
 
-    res.status(201).json({
-     message: "Compte crée avec succès, veuillez consulter votre boite mail"
+    res.status(201).json({newEntreprise
     });
   } catch (error) {
     console.error("Erreur lors de l'inscription de l'utilisateur :", error);

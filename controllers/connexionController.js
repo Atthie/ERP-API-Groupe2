@@ -20,11 +20,12 @@ export const connexionController = async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({ error: "Mot de passe incorrect" });
     }
+    const { role } = user;
 
  
-    res.status(200).json({username});
+    res.status(200).json({username,role});
   } catch (error) {
     console.error("Erreur lors de la connexion de l'utilisateur :", error);
-    res.status(500).json({ error: "Une erreur est survenue lors de la connexion" });
+    res.status(500).json({ error: "Email incorrect" });
   }
 };
