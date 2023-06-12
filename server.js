@@ -5,7 +5,7 @@ const  app = express();
 import inscription from './routes/RouteInscription.js'
 import connexion from './routes/RouteConnexion.js'
 import inscriptionEM from './routes/RouteInvitationEM.js'
-import userEm from './routes/RouteUserEM.js'
+import user from './routes/RouteUser.js'
 
 import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
@@ -17,7 +17,7 @@ app.use(passport.initialize());
 
 app.use('/inscription',inscription);
 app.use('/inscriptionEM',inscriptionEM);
-app.use('/userEM',userEm);
+app.use('/user',user);
 
 
 app.use('/connexion',connexion);

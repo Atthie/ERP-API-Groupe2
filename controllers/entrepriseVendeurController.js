@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 
 export const inscriptionController = async (req, res) => {
   try {
-    const { nom, description, email, telephone } = req.body;
+    const { nom, logo,description, email } = req.body;
     // Validation des données
     if (validator.isEmpty(nom)) {
       return res.status(400).json({ error: "Le champ 'nom' est requis." });
@@ -14,12 +14,8 @@ export const inscriptionController = async (req, res) => {
     if (validator.isEmpty(description)) {
       return res.status(400).json({ error: "Le champ 'description' est requis." });
     }
-    if (validator.isEmpty(telephone)) {
-      return res.status(400).json({ error: "Le champ 'telephone' est requis." });
-    }
-    if (validator.isEmpty(email)) {
-      return res.status(400).json({ error: "Le champ 'email' est requis." });
-    }
+   
+   
     if (!validator.isEmail(email)) {
       return res.status(400).json({ error: "L'adresse e-mail est invalide." });
     }
@@ -36,7 +32,7 @@ export const inscriptionController = async (req, res) => {
       nom,
       description,
       email,
-      telephone
+
     });
 
     // Création de l'utilisateur de l'entreprise avec mot de passe crypté
@@ -69,8 +65,7 @@ export const inscriptionController = async (req, res) => {
     // Fin de l'envoi de l'e-mail
 
     res.status(201).json({
-      entreprise: newEntreprise,
-      user: newUser,
+     message: "Compte crée avec succès, veuillez consulter votre boite mail"
     });
   } catch (error) {
     console.error("Erreur lors de l'inscription de l'utilisateur :", error);

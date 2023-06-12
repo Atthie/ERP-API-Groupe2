@@ -13,11 +13,7 @@ const User = sequelize.define('User', {
   },
   idEntreprise: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Entreprise,
-      key: 'id',
-    },
+    allowNull: true, 
   },
   pwd: {
     type: DataTypes.STRING,
@@ -41,8 +37,5 @@ const User = sequelize.define('User', {
   },
 });
 
-User.associate = () => {
-  User.belongsTo(Entreprise, { foreignKey: 'idEntreprise' });
-};
 
 export default User;

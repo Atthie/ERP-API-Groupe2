@@ -7,6 +7,7 @@ const Entreprise = sequelize.define('Entreprise', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+ 
   description: {
     type: DataTypes.STRING,
     allowNull: true,
@@ -15,10 +16,7 @@ const Entreprise = sequelize.define('Entreprise', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  telephone: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,

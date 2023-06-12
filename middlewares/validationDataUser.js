@@ -9,9 +9,7 @@ const validationDataUser = (req, res, next) => {
   if (validator.isEmpty(role)) {
     return res.status(400).json({ error: "Le champ 'nom d'utilisateur' est requis." });
   }
-  if (validator.isEmpty(idEntreprise)) {
-    return res.status(400).json({ error: "Le champ 'identifiant de l'entreprise' est requis." });
-  }
+  
   if (validator.isEmpty(pwd)) {
     return res.status(400).json({ error: "Le champ 'mot de passe' est requis." });
   }
