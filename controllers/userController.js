@@ -10,11 +10,10 @@ export const userController = async (req, res) => {
       email,
       telephone
     });
-  
-
-    
+            
     res.status(201).json(newUser);
   } catch (error) {
+    
     console.error("Erreur lors de l'inscription de l'utilisateur :", error);
     res.status(500).json({ error: "Une erreur est survenue lors de l'inscription" });
   }
