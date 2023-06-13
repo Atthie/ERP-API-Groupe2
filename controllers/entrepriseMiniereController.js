@@ -66,4 +66,16 @@ export const inscriptionEMController = async (req, res) => {
   }
 };
 
+export const getAllEntreprisesMinieres = async (req, res) => {
+  try {
+    const entreprises = await Entreprise.findAll();
+    res.json(entreprises);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Une erreur s\'est produite lors de la récupération des entreprises' });
+  }
+};
+
+
+
 
