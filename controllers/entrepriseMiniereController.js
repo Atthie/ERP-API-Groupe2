@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 
 export const inscriptionEMController = async (req, res) => {
   try {
-    const { nom, description, email, telephone } = req.body;
+    const { nom, description, email } = req.body;
     // Validation des données
     if (validator.isEmpty(nom)) {
       return res.status(400).json({ error: "Le champ 'nom' est requis." });
@@ -13,20 +13,19 @@ export const inscriptionEMController = async (req, res) => {
     if (validator.isEmpty(description)) {
       return res.status(400).json({ error: "Le champ 'description' est requis." });
     }
-    if (validator.isEmpty(telephone)) {
-      return res.status(400).json({ error: "Le champ 'telephone' est requis." });
-    }
+   
     if (validator.isEmpty(email)) {
       return res.status(400).json({ error: "Le champ 'email' est requis." });
     }
     if (!validator.isEmail(email)) {
       return res.status(400).json({ error: "L'adresse e-mail est invalide." });
     }
-    // Fin de la validation des données
-
-    // Vérification si l'entreprise existe déjà
-    const existingEntreprise = await Entreprise.findOne({ where: { email } });
-    if (existingEntreprise) {
+    const existingEntrepriseName = await Entreprise.findOne({ where: { nom } });
+    if (existingEntrepriseName) {
+      return res.status(400).json({ error: "Une entreprise avec ce nom existe" });
+    }
+    const existingEntrepriseEmail = await Entreprise.findOne({ where: { email } });
+    if (existingEntrepriseEmail) {
       return res.status(400).json({ error: "Une entreprise avec cette adresse e-mail existe déjà." });
     }
 
@@ -34,8 +33,8 @@ export const inscriptionEMController = async (req, res) => {
     const newEntreprise = await Entreprise.create({
       nom,
       description,
-      email,
-      telephone
+      email
+
     });
 
     // Envoi d'un e-mail à l'entreprise Miniere avec le lien de l inscription 
@@ -57,7 +56,9 @@ export const inscriptionEMController = async (req, res) => {
     });
     // Fin de l'envoi de l'e-mail
 
-    res.status(201).json({newEntreprise
+    res.status(201).json({
+      message: "Compte crée avec succès"
+
     });
   } catch (error) {
     console.error("Erreur lors de l'inscription de l'utilisateur :", error);
