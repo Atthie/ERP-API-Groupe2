@@ -25,20 +25,18 @@ export const inscriptionEMController = async (req, res) => {
       return res.status(400).json({ error: "Une entreprise avec ce nom existe" });
     }
     const existingEntrepriseEmail = await Entreprise.findOne({ where: { email } });
+    
     if (existingEntrepriseEmail) {
       return res.status(400).json({ error: "Une entreprise avec cette adresse e-mail existe déjà." });
     }
-
     // Création de l'entreprise
     const newEntreprise = await Entreprise.create({
       nom,
       description,
-      email
-
+      email,
+      etat:1
     });
-
     // Envoi d'un e-mail à l'entreprise Miniere avec le lien de l inscription 
-    
     const hashedId = await bcrypt.hash(String(newEntreprise.id), 10);
     const mailOptions = {
       from: 'atthiemn@gmail',
@@ -76,6 +74,51 @@ export const getAllEntreprisesMinieres = async (req, res) => {
   }
 };
 
+
+export const editEntrepriseById = async (req, res) => {
+  const id  = req.params.id;
+  console.log(id)
+  const { nom, description, email, etat } = req.body;
+  console.log(nom)
+  try {
+    const entreprise = await Entreprise.findByPk(id);
+
+    if (!entreprise) {
+      return res.status(404).json({ error: 'Entreprise non trouvée' });
+    }
+
+    entreprise.nom = nom;
+    entreprise.description = description;
+    entreprise.email = email;
+    entreprise.etat = 1;
+
+    await entreprise.save();
+
+    return res.status(200).json({ message: 'Entreprise modifier avec succès' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Une erreur est survenue lors de la mise à jour de l\'entreprise' });
+  }
+};
+
+export const getEntrepriseById = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const entreprise = await Entreprise.findByPk(id);
+
+    if (!entreprise) {
+      return res.status(404).json({ error: "Entreprise non trouvée" });
+    }
+
+    return res.status(200).json(entreprise);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: "Une erreur est survenue lors de la récupération de l'entreprise" });
+  }
+};
 
 
 

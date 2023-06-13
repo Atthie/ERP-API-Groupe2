@@ -16,7 +16,10 @@ const Entreprise = sequelize.define('Entreprise', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  
+  etat: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
