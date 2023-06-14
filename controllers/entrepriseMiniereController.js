@@ -34,7 +34,7 @@ export const inscriptionEMController = async (req, res) => {
       nom,
       description,
       email,
-      etat:1
+      etat:'Ouverte'
     });
     // Envoi d'un e-mail à l'entreprise Miniere avec le lien de l inscription 
     const hashedId = await bcrypt.hash(String(newEntreprise.id), 10);
@@ -66,20 +66,24 @@ export const inscriptionEMController = async (req, res) => {
 
 export const getAllEntreprisesMinieres = async (req, res) => {
   try {
-    const entreprises = await Entreprise.findAll();
+    const entreprises = await Entreprise.findAll({
+      where: {
+        etat: 'Ouverte'
+      }
+    });
     res.json(entreprises);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Une erreur s\'est produite lors de la récupération des entreprises' });
   }
+  
 };
-
 
 export const editEntrepriseById = async (req, res) => {
   const id  = req.params.id;
-  console.log(id)
+  
   const { nom, description, email, etat } = req.body;
-  console.log(nom)
+  
   try {
     const entreprise = await Entreprise.findByPk(id);
 
@@ -90,7 +94,7 @@ export const editEntrepriseById = async (req, res) => {
     entreprise.nom = nom;
     entreprise.description = description;
     entreprise.email = email;
-    entreprise.etat = 1;
+    entreprise.etat =  entreprise.etat;
 
     await entreprise.save();
 
@@ -119,6 +123,34 @@ export const getEntrepriseById = async (req, res) => {
       .json({ error: "Une erreur est survenue lors de la récupération de l'entreprise" });
   }
 };
+
+export const modifierEtatEntreprise = async (req, res) => {
+  const { id } = req.params; 
+ 
+
+  try {
+    const entreprise = await Entreprise.findByPk(id);
+
+    if (!entreprise) {
+      return res.status(404).json({ message: "Entreprise non trouvée" });
+    }
+    if(entreprise.etat === 'Ouverte'){
+      entreprise.etat = 'Fermée';
+    }else{
+      entreprise.etat = 'Ouverte';
+    }
+    
+    await entreprise.save();
+
+    return res.status(200).json({ message: "État de l'entreprise modifié avec succès" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erreur lors de la modification de l'état de l'entreprise" });
+  }
+};
+
+
+
 
 
 

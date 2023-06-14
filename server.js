@@ -12,6 +12,7 @@ import EditEM from './routes/RouteEditEM.js'
 import GetEMId from './routes/RouteGetEMId.js'
 import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
+import DeleteEM from "./routes/RouteDeleteEM.js"
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,6 +22,8 @@ app.use('/AjoutEM',AjoutEM);
 app.use('/EditEM',EditEM);
 app.use('/GetEM',AffichageEM);
 app.use('/GetEMId',GetEMId);
+
+app.use('/DeleteEM',DeleteEM);
 
 app.use('/inscription',inscription);
 app.use('/inscriptionEM',inscriptionEM);
