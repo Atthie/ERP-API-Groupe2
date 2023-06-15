@@ -42,9 +42,8 @@ export const inscriptionEMController = async (req, res) => {
       from: 'atthiemn@gmail',
       to: newEntreprise.email,
       subject: 'Invitation d inscription',
-      text: `Bonjour ${newEntreprise.nom}, voici votre lien d'inscription :  http://192.168.0.105:3001/${hashedId}`,
+      text: `Bonjour ${newEntreprise.nom}, voici votre lien d'inscription :  http://localhost:3000/User_Em/${newEntreprise.id}`,
     };
-
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error("Erreur lors de l'envoi de l'e-mail :", error);
@@ -53,7 +52,6 @@ export const inscriptionEMController = async (req, res) => {
       }
     });
     // Fin de l'envoi de l'e-mail
-
     res.status(201).json({
       message: "Compte crée avec succès"
 

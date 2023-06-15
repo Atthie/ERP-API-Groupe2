@@ -32,6 +32,7 @@ export const inscriptionController = async (req, res) => {
       nom,
       description,
       email,
+      etat:'Ouverte'
 
     });
 

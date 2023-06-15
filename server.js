@@ -13,7 +13,8 @@ import GetEMId from './routes/RouteGetEMId.js'
 import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
 import DeleteEM from "./routes/RouteDeleteEM.js"
-
+import UserEM from "./routes/RouteUserEM.js"
+import userEM from "./controllers/userController.js";
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
@@ -22,7 +23,7 @@ app.use('/AjoutEM',AjoutEM);
 app.use('/EditEM',EditEM);
 app.use('/GetEM',AffichageEM);
 app.use('/GetEMId',GetEMId);
-
+app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);
 
 app.use('/inscription',inscription);
