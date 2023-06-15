@@ -48,10 +48,6 @@ Article.init({
     type: _sequelize.DataTypes.STRING,
     allowNull: true
   },
-  prix: {
-    type: _sequelize.DataTypes.FLOAT,
-    allowNull: false
-  },
   quantite: {
     type: _sequelize.DataTypes.INTEGER,
     allowNull: false
@@ -66,3 +62,4 @@ Article.init({
 });
 var _default = Article;
 exports["default"] = _default;
+

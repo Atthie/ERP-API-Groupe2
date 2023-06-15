@@ -1,5 +1,5 @@
 import express from "express";
-import { createArticle, getArticles, getArticleById, updateArticlePut, updateArticlePatch, deleteArticle } from "../controllers/articleController.js";
+import { createArticle, getArticles, getArticleById, updateArticlePut, updateArticlePatch, deleteArticle,getArticlePhotoById } from "../controllers/articleController.js";
 
 const router = express.Router();
 
@@ -9,6 +9,8 @@ router.post("/", createArticle);
 // Récupérer tous les articles
 router.get("/", getArticles);
 
+router.get("/uploads/photo", getArticlePhotoById);
+// "/articles/:id/photo"
 // Récupérer un article spécifique par son ID
 router.get("/:id", getArticleById);
 

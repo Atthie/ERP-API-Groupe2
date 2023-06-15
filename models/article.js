@@ -14,10 +14,6 @@ Article.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    prix: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     quantite: {
       type: DataTypes.INTEGER,
       allowNull: false,

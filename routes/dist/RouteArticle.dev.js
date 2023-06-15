@@ -16,7 +16,9 @@ var router = _express["default"].Router(); // Créer un nouvel article
 
 router.post("/", _articleController.createArticle); // Récupérer tous les articles
 
-router.get("/", _articleController.getArticles); // Récupérer un article spécifique par son ID
+router.get("/", _articleController.getArticles);
+router.get("/uploads/photo", _articleController.getArticlePhotoById); // "/articles/:id/photo"
+// Récupérer un article spécifique par son ID
 
 router.get("/:id", _articleController.getArticleById); // Mettre à jour un article spécifique par son ID en utilisant le verbe PUT
 

@@ -2,19 +2,15 @@ import { validationResult } from 'express-validator';
 import Article from '../models/article.js';
 import multer from 'multer';
 
-// Configuration de multer pour gérer les fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Spécifie le dossier de destination des fichiers
     cb(null, './uploads');
   },
   filename: function (req, file, cb) {
-    // Spécifie le nom du fichier
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
 
-// Vérification du type de fichier
 const fileFilter = function (req, file, cb) {
   const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
   if (allowedMimeTypes.includes(file.mimetype)) {
@@ -24,12 +20,10 @@ const fileFilter = function (req, file, cb) {
   }
 };
 
-// Limite de taille du fichier
 const limits = {
-  fileSize: 1024 * 1024 * 5 // 5 Mo (en octets)
+  fileSize: 1024 * 1024 * 5
 };
 
-// Crée une instance de multer avec les options de configuration
 const upload = multer({ storage, fileFilter, limits });
 
 /**
@@ -41,20 +35,16 @@ const upload = multer({ storage, fileFilter, limits });
  */
 export const createArticle = async (req, res) => {
   try {
-    // Utilisation de multer pour gérer le fichier téléchargé
     upload.single('photo')(req, res, async function handleUploadError(err) {
       if (err instanceof multer.MulterError) {
-        // Une erreur s'est produite lors du téléchargement du fichier
         return res.status(400).json({ message: 'Erreur lors du téléchargement du fichier.', error: err.message });
       } else if (err) {
-        // Une erreur s'est produite pour une autre raison
         return res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'article.', error: err.message });
       }
 
       const { nom, description, prix, quantite } = req.body;
       let photo = req.file ? req.file.path : null;
 
-      // Valider les données entrantes
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -63,12 +53,11 @@ export const createArticle = async (req, res) => {
       const nouvelArticle = await Article.create({
         nom,
         description,
-        prix,
         quantite,
         photo
       });
 
-      res.status(201).json({ article: nouvelArticle });
+      res.status(201).json({ article: nouvelArticle, photo });
     });
   } catch (error) {
     console.error(error);
@@ -117,6 +106,47 @@ export const getArticleById = async (req, res) => {
 };
 
 /**
+ * Récupère la photo d'un article par son ID.
+ *
+ * @param {Object} req - Requête HTTP
+ * @param {Object} res - Réponse HTTP
+ * @returns {Object} - Photo de l'article
+ */
+export const getArticlePhotoById = async (req, res) => {
+  try {
+    const article = await Article.findByPk(req.params.id);
+
+    if (!article) {
+      return res.status(404).json({ message: 'Article non trouvé.' });
+    }
+
+    if (!article.photo) {
+      return res.status(404).json({ message: 'La photo de l\'article n\'existe pas.' });
+    }
+
+    // Implémentation de la mise en cache des photos
+    const cachedPhoto = await cacheService.get(article.photo);
+    if (cachedPhoto) {
+      return res.sendFile(cachedPhoto);
+    }
+
+    // Implémentation de la compression des images
+    const compressedPhoto = await imageCompressionService.compress(article.photo);
+    
+    // Implémentation de la mise en cache des photos (stockage en cache)
+    await cacheService.set(article.photo, compressedPhoto);
+
+    // Envoi de la photo compressée au client
+    res.sendFile(compressedPhoto);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de la photo de l\'article.' });
+  }
+};
+
+
+
+/**
  * Met à jour un article (via HTTP PUT).
  *
  * @param {Object} req - Requête HTTP
@@ -127,7 +157,6 @@ export const updateArticlePut = async (req, res) => {
   try {
     const { nom, description, prix, quantite } = req.body;
 
-    // Valider les données entrantes
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -140,18 +169,15 @@ export const updateArticlePut = async (req, res) => {
       quantite
     };
 
-    // Utilisation de multer pour gérer le fichier téléchargé
     upload.single('photo')(req, res, async function handleUploadError(err) {
       if (err instanceof multer.MulterError) {
-        // Une erreur s'est produite lors du téléchargement du fichier
         return res.status(400).json({ message: 'Erreur lors du téléchargement du fichier.', error: err.message });
       } else if (err) {
-        // Une erreur s'est produite pour une autre raison
         return res.status(500).json({ message: 'Une erreur est survenue lors de la mise à jour de l\'article.', error: err.message });
       }
 
       if (req.file) {
-        updatedFields.photo = req.file.path;
+        updatedFields.photo = req.file.path; 
       }
 
       const article = await Article.findByPk(req.params.id);
@@ -162,7 +188,7 @@ export const updateArticlePut = async (req, res) => {
 
       await article.update(updatedFields);
 
-      res.status(200).json({ article });
+      res.status(200).json({ article, photo: req.file ? req.file.path : null });
     });
   } catch (error) {
     console.error(error);
@@ -181,7 +207,6 @@ export const updateArticlePatch = async (req, res) => {
   try {
     const { nom, description, prix, quantite } = req.body;
 
-    // Valider les données entrantes
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -194,13 +219,10 @@ export const updateArticlePatch = async (req, res) => {
       quantite
     };
 
-    // Utilisation de multer pour gérer le fichier téléchargé
     upload.single('photo')(req, res, async function handleUploadError(err) {
       if (err instanceof multer.MulterError) {
-        // Une erreur s'est produite lors du téléchargement du fichier
         return res.status(400).json({ message: 'Erreur lors du téléchargement du fichier.', error: err.message });
       } else if (err) {
-        // Une erreur s'est produite pour une autre raison
         return res.status(500).json({ message: 'Une erreur est survenue lors de la mise à jour de l\'article.', error: err.message });
       }
 
@@ -216,7 +238,7 @@ export const updateArticlePatch = async (req, res) => {
 
       await article.update(updatedFields);
 
-      res.status(200).json({ article });
+      res.status(200).json({ article, photo: req.file ? req.file.path : null });
     });
   } catch (error) {
     console.error(error);
