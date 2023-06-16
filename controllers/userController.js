@@ -25,7 +25,9 @@ import validationDataUser from "../middlewares/validationDataUser.js"
         idEntreprise:idEntreprise,
         pwd: hashedPwd,
         telephone,
-        email
+        email,
+        etat:"Validé"
+
       });
 
       res.status(201).json({message:"Compte crée avec succès" });
