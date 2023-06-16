@@ -19,8 +19,6 @@ import article from './routes/RouteArticle.js';
 import searchArticleRoutes from './routes/RouteSearchArticle.js';
 
 
-import Entreprise from "./models/entreprisesVendeur.js";
-import User from "./models/users.js";
 import Article from './models/article.js';
 import UserAttente from "./routes/RouteGetUserAttente.js"
 import CountRole from "./routes/RouteCountRole.js"
