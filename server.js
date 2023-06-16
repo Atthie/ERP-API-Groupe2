@@ -15,11 +15,19 @@ import User from "./models/users.js";
 import DeleteEM from "./routes/RouteDeleteEM.js"
 import UserEM from "./routes/RouteUserEM.js"
 import userEM from "./controllers/userController.js";
+import UserAttente from "./routes/RouteGetUserAttente.js"
+import CountRole from "./routes/RouteCountRole.js"
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
 app.use(passport.initialize());
 app.use('/AjoutEM',AjoutEM);
+app.use('/CountRole',CountRole);
+
+app.use('/UserAttente',UserAttente);
+
+
 app.use('/EditEM',EditEM);
 app.use('/GetEM',AffichageEM);
 app.use('/GetEMId',GetEMId);

@@ -14,8 +14,6 @@ export const inscriptionController = async (req, res) => {
     if (validator.isEmpty(description)) {
       return res.status(400).json({ error: "Le champ 'description' est requis." });
     }
-   
-   
     if (!validator.isEmail(email)) {
       return res.status(400).json({ error: "L'adresse e-mail est invalide." });
     }
@@ -33,19 +31,19 @@ export const inscriptionController = async (req, res) => {
       description,
       email,
       etat:'Ouverte'
-
     });
 
     // Création de l'utilisateur de l'entreprise avec mot de passe crypté
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash("Erp@2023", saltRounds);
     const newUser = await User.create({
-      username: newEntreprise.email,
+      username: newEntreprise.nom,
       idEntreprise: newEntreprise.id,
       pwd: hashedPassword,
       email: "",
       telephone: "",
-      role: "Vendeur"
+      role: "Vendeur",
+      etat: "En attente"
     });
 
     // Envoi d'un e-mail à l'entreprise avec les informations de connexion de l'utilisateur

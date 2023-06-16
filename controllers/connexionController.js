@@ -23,7 +23,7 @@ export const connexionController = async (req, res) => {
     const { role } = user;
 
  
-    res.status(200).json({username,role});
+    res.status(200).json({username,role,etat});
   } catch (error) {
     console.error("Erreur lors de la connexion de l'utilisateur :", error);
     res.status(500).json({ error: "Email incorrect" });

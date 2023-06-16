@@ -11,6 +11,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  etat: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   idEntreprise: {
     type: DataTypes.INTEGER,
     allowNull: true, 
