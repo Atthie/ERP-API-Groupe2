@@ -57,6 +57,8 @@ export const getUserAttente =async function getUsersEnAttente(req, res) {
       where: {
         etat: 'En attente',
       },
+      order: [['createdAt', 'DESC']],
+      limit: 3, 
     });
 
     res.json(users);
