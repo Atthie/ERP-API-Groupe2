@@ -22,12 +22,19 @@ import searchArticleRoutes from './routes/RouteSearchArticle.js';
 import Entreprise from "./models/entreprisesVendeur.js";
 import User from "./models/users.js";
 import Article from './models/article.js';
+import UserAttente from "./routes/RouteGetUserAttente.js"
+import CountRole from "./routes/RouteCountRole.js"
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
 app.use(passport.initialize());
 app.use('/AjoutEM',AjoutEM);
+app.use('/CountRole',CountRole);
+
+app.use('/UserAttente',UserAttente);
+
+
 app.use('/EditEM',EditEM);
 app.use('/GetEM',AffichageEM);
 app.use('/GetEMId',GetEMId);
