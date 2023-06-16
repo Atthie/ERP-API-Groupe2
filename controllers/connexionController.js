@@ -11,7 +11,7 @@ export const connexionController = async (req, res) => {
     if (validator.isEmpty(pwd)) {
       return res.status(400).json({ error: "Le champ 'mot de passe' est requis." });
     }
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({ where: { username } }); 
     const passwordMatch = await bcrypt.compare(pwd, user.pwd);
 
     if (!user) {
@@ -29,3 +29,5 @@ export const connexionController = async (req, res) => {
     res.status(500).json({ error: "Email incorrect" });
   }
 };
+
+

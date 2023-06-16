@@ -15,6 +15,14 @@ import User from "./models/users.js";
 import DeleteEM from "./routes/RouteDeleteEM.js"
 import UserEM from "./routes/RouteUserEM.js"
 import userEM from "./controllers/userController.js";
+import article from './routes/RouteArticle.js';
+import searchArticleRoutes from './routes/RouteSearchArticle.js';
+
+
+import Entreprise from "./models/entreprisesVendeur.js";
+import User from "./models/users.js";
+import Article from './models/article.js';
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
@@ -26,16 +34,25 @@ app.use('/GetEMId',GetEMId);
 app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);
 
+app.use('/articles', article);
 app.use('/inscription',inscription);
 app.use('/inscriptionEM',inscriptionEM);
 app.use('/user',user);
 
 
 app.use('/connexion',connexion);
+app.use('/articles', searchArticleRoutes);
 await User.sync();
 await Entreprise.sync();
+await Article.sync();
 
 
 app.listen(5000, () => {
   console.log("le serveur tourne sur le port 5000");
 });
+
+
+
+
+
+
