@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.deleteArticle = exports.updateArticlePatch = exports.updateArticlePut = exports.getArticlePhotoById = exports.getArticleById = exports.getArticles = exports.createArticle = void 0;
+exports.getArticleCount = exports.deleteArticle = exports.updateArticlePatch = exports.updateArticlePut = exports.getArticlePhotoById = exports.getArticleById = exports.getArticles = exports.createArticle = void 0;
 
 var _expressValidator = require("express-validator");
 
@@ -145,7 +145,7 @@ var createArticle = function createArticle(req, res) {
 exports.createArticle = createArticle;
 
 var getArticles = function getArticles(req, res) {
-  var articles;
+  var articles, count;
   return regeneratorRuntime.async(function getArticles$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
@@ -156,26 +156,28 @@ var getArticles = function getArticles(req, res) {
 
         case 3:
           articles = _context3.sent;
+          count = articles.length;
           res.status(200).json({
-            articles: articles
+            articles: articles,
+            count: count
           });
-          _context3.next = 11;
+          _context3.next = 12;
           break;
 
-        case 7:
-          _context3.prev = 7;
+        case 8:
+          _context3.prev = 8;
           _context3.t0 = _context3["catch"](0);
           console.error(_context3.t0);
           res.status(500).json({
             message: 'Une erreur est survenue lors de la récupération des articles.'
           });
 
-        case 11:
+        case 12:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[0, 7]]);
+  }, null, null, [[0, 8]]);
 };
 /**
  * Récupère un article par son ID.
@@ -618,5 +620,49 @@ var deleteArticle = function deleteArticle(req, res) {
     }
   }, null, null, [[0, 11]]);
 };
+/**
+ * Récupère le nombre total d'articles dans la base de données.
+ *
+ * @param {Object} req - Requête HTTP
+ * @param {Object} res - Réponse HTTP
+ * @returns {Object} - Nombre total d'articles
+ */
+
 
 exports.deleteArticle = deleteArticle;
+
+var getArticleCount = function getArticleCount(req, res) {
+  var count;
+  return regeneratorRuntime.async(function getArticleCount$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          _context11.prev = 0;
+          _context11.next = 3;
+          return regeneratorRuntime.awrap(_article["default"].count());
+
+        case 3:
+          count = _context11.sent;
+          res.status(200).json({
+            count: count
+          });
+          _context11.next = 11;
+          break;
+
+        case 7:
+          _context11.prev = 7;
+          _context11.t0 = _context11["catch"](0);
+          console.error(_context11.t0);
+          res.status(500).json({
+            message: 'Une erreur est survenue lors du comptage des articles.'
+          });
+
+        case 11:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  }, null, null, [[0, 7]]);
+};
+
+exports.getArticleCount = getArticleCount;

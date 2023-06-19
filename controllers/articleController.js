@@ -75,8 +75,9 @@ export const createArticle = async (req, res) => {
 export const getArticles = async (req, res) => {
   try {
     const articles = await Article.findAll();
+    const count = articles.length;
 
-    res.status(200).json({ articles });
+    res.status(200).json({ articles, count });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des articles.' });
@@ -132,7 +133,7 @@ export const getArticlePhotoById = async (req, res) => {
 
     // Implémentation de la compression des images
     const compressedPhoto = await imageCompressionService.compress(article.photo);
-    
+
     // Implémentation de la mise en cache des photos (stockage en cache)
     await cacheService.set(article.photo, compressedPhoto);
 
@@ -143,8 +144,6 @@ export const getArticlePhotoById = async (req, res) => {
     res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de la photo de l\'article.' });
   }
 };
-
-
 
 /**
  * Met à jour un article (via HTTP PUT).
@@ -177,7 +176,7 @@ export const updateArticlePut = async (req, res) => {
       }
 
       if (req.file) {
-        updatedFields.photo = req.file.path; 
+        updatedFields.photo = req.file.path;
       }
 
       const article = await Article.findByPk(req.params.id);
@@ -267,5 +266,23 @@ export const deleteArticle = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la suppression de l\'article.' });
+  }
+};
+
+/**
+ * Récupère le nombre total d'articles dans la base de données.
+ *
+ * @param {Object} req - Requête HTTP
+ * @param {Object} res - Réponse HTTP
+ * @returns {Object} - Nombre total d'articles
+ */
+export const getArticleCount = async (req, res) => {
+  try {
+    const count = await Article.count();
+
+    res.status(200).json({ count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors du comptage des articles.' });
   }
 };
