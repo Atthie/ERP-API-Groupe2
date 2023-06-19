@@ -8,13 +8,14 @@ import inscriptionEM from './routes/RouteInvitationEM.js'
 import user from './routes/RouteUser.js'
 import AjoutEM from './routes/RouteAjoutEntrepriseMiniere.js'
 import AffichageEM from './routes/RouteRecupEM.js'
+import AffichageUser from './routes/RouteRecupUser.js'
+
 import EditEM from './routes/RouteEditEM.js'
 import GetEMId from './routes/RouteGetEMId.js'
 import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
 import DeleteEM from "./routes/RouteDeleteEM.js"
 import UserEM from "./routes/RouteUserEM.js"
-import userEM from "./controllers/userController.js";
 import article from './routes/RouteArticle.js';
 import searchArticleRoutes from './routes/RouteSearchArticle.js';
 
@@ -35,6 +36,8 @@ app.use('/UserAttente',UserAttente);
 
 app.use('/EditEM',EditEM);
 app.use('/GetEM',AffichageEM);
+app.use('/GetUser',AffichageUser);
+
 app.use('/GetEMId',GetEMId);
 app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);

@@ -1,8 +1,10 @@
 import User from "../models/users.js";
 import bcrypt from 'bcrypt';
 import validationDataUser from "../middlewares/validationDataUser.js"
+import Entreprise from "../models/entreprises.js";
+import { Sequelize } from "sequelize";
 
- export const userEM = async (req, res) => {
+export const userEM = async (req, res) => {
   try {
    validationDataUser (req, res, async() => {
       const { username,role, pwd, pwdConfirm, telephone, email } = req.body;
@@ -50,7 +52,6 @@ export const getUserCountByRole = async (req, res) =>{
       console.error(error);
       res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des données.' });
     }
-  
 };
 
 export const getUserAttente =async function getUsersEnAttente(req, res) {
@@ -70,4 +71,18 @@ export const getUserAttente =async function getUsersEnAttente(req, res) {
   }
 }
 
-export default getUserCountByRole ; userEM;
+export const getAllUser = async (req, res) => {
+  try {
+    const users = await User.findAll(); 
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Une erreur s'est produite lors de la récupération des utilisateurs" });
+  }
+};
+
+
+
+
+
+export default getUserCountByRole; userEM;
