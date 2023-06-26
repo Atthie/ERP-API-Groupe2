@@ -25,6 +25,6 @@ router.delete("/:id", deleteArticle);
 router.get("/:id/photo", getArticlePhotoById);
 
 // Compter le nombre total d'articles
-router.get("/count", getArticleCount);
+router.get("/articles/count", getArticleCount);
 
 export default router;

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,8 +8,6 @@ exports["default"] = void 0;
 var _sequelize = require("sequelize");
 
 var _database = _interopRequireDefault(require("../config/database.js"));
-
-var _users = _interopRequireDefault(require("./users.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -27,45 +25,48 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var Article =
+var Facture =
 /*#__PURE__*/
 function (_Model) {
-  _inherits(Article, _Model);
+  _inherits(Facture, _Model);
 
-  function Article() {
-    _classCallCheck(this, Article);
+  function Facture() {
+    _classCallCheck(this, Facture);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Article).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Facture).apply(this, arguments));
   }
 
-  return Article;
+  return Facture;
 }(_sequelize.Model);
 
-Article.init({
-  nom: {
+Facture.init({
+  entreprise: {
     type: _sequelize.DataTypes.STRING,
     allowNull: false
   },
   description: {
     type: _sequelize.DataTypes.STRING,
-    allowNull: true
+    allowNull: false
   },
-  quantite: {
-    type: _sequelize.DataTypes.INTEGER,
-    allowNull: true
+  articles: {
+    type: _sequelize.DataTypes.JSONB,
+    allowNull: false
   },
-  photo: {
-    type: _sequelize.DataTypes.STRING,
-    allowNull: true
+  totalHT: {
+    type: _sequelize.DataTypes.FLOAT,
+    allowNull: false
   },
-  statut: {
-    type: _sequelize.DataTypes.BOOLEAN,
-    allowNull: true,
-    defaultValue: false
+  taxes: {
+    type: _sequelize.DataTypes.FLOAT,
+    allowNull: false
+  },
+  totalTTC: {
+    type: _sequelize.DataTypes.FLOAT,
+    allowNull: false
   },
   date: {
     type: _sequelize.DataTypes.DATE,
-    allowNull: true
+    allowNull: false
   },
   createdAt: {
     type: _sequelize.DataTypes.DATE,
@@ -74,21 +75,10 @@ Article.init({
   updatedAt: {
     type: _sequelize.DataTypes.DATE,
     allowNull: false
-  },
-  userId: {
-    type: _sequelize.DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: _users["default"],
-      key: 'id'
-    }
   }
 }, {
   sequelize: _database["default"],
-  modelName: 'Article'
+  modelName: 'Facture'
 });
-Article.belongsTo(_users["default"], {
-  foreignKey: 'userId'
-});
-var _default = Article;
+var _default = Facture;
 exports["default"] = _default;

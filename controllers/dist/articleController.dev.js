@@ -3,15 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getArticleCount = exports.deleteArticle = exports.updateArticlePatch = exports.updateArticlePut = exports.getArticlePhotoById = exports.getArticleById = exports.getArticles = exports.createArticle = void 0;
+exports.searchArticles = exports.getArticleCount = exports.deleteArticle = exports.updateArticlePatch = exports.updateArticlePut = exports.getArticlePhotoById = exports.getArticleById = exports.getArticles = exports.createArticle = void 0;
 
 var _expressValidator = require("express-validator");
 
 var _article = _interopRequireDefault(require("../models/article.js"));
 
+var _sequelize = require("sequelize");
+
 var _multer = _interopRequireDefault(require("multer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var storage = _multer["default"].diskStorage({
   destination: function destination(req, file, cb) {
@@ -55,7 +59,7 @@ var createArticle = function createArticle(req, res) {
         case 0:
           try {
             upload.single('photo')(req, res, function handleUploadError(err) {
-              var _req$body, nom, description, prix, quantite, photo, errors, nouvelArticle;
+              var _req$body, nom, description, quantite, photo, statut, errors, nouvelArticle;
 
               return regeneratorRuntime.async(function handleUploadError$(_context) {
                 while (1) {
@@ -83,12 +87,13 @@ var createArticle = function createArticle(req, res) {
                       }));
 
                     case 6:
-                      _req$body = req.body, nom = _req$body.nom, description = _req$body.description, prix = _req$body.prix, quantite = _req$body.quantite;
+                      _req$body = req.body, nom = _req$body.nom, description = _req$body.description, quantite = _req$body.quantite;
                       photo = req.file ? req.file.path : null;
+                      statut = quantite >= 6;
                       errors = (0, _expressValidator.validationResult)(req);
 
                       if (errors.isEmpty()) {
-                        _context.next = 11;
+                        _context.next = 12;
                         break;
                       }
 
@@ -96,23 +101,26 @@ var createArticle = function createArticle(req, res) {
                         errors: errors.array()
                       }));
 
-                    case 11:
-                      _context.next = 13;
+                    case 12:
+                      _context.next = 14;
                       return regeneratorRuntime.awrap(_article["default"].create({
                         nom: nom,
                         description: description,
                         quantite: quantite,
-                        photo: photo
+                        photo: photo,
+                        statut: statut,
+                        dateAjout: new Date() // Utilisation de la date actuelle pour la date de création de l'article
+
                       }));
 
-                    case 13:
+                    case 14:
                       nouvelArticle = _context.sent;
                       res.status(201).json({
                         article: nouvelArticle,
                         photo: photo
                       });
 
-                    case 15:
+                    case 16:
                     case "end":
                       return _context.stop();
                   }
@@ -145,39 +153,98 @@ var createArticle = function createArticle(req, res) {
 exports.createArticle = createArticle;
 
 var getArticles = function getArticles(req, res) {
-  var articles, count;
+  var _req$query, search, keywords, category, articles, count;
+
   return regeneratorRuntime.async(function getArticles$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
-          _context3.next = 3;
+          _req$query = req.query, search = _req$query.search, keywords = _req$query.keywords, category = _req$query.category;
+
+          if (!search) {
+            _context3.next = 8;
+            break;
+          }
+
+          _context3.next = 5;
+          return regeneratorRuntime.awrap(_article["default"].findAll({
+            where: {
+              nom: _defineProperty({}, _sequelize.Op.iLike, "%".concat(search, "%"))
+            }
+          }));
+
+        case 5:
+          articles = _context3.sent;
+          _context3.next = 23;
+          break;
+
+        case 8:
+          if (!keywords) {
+            _context3.next = 14;
+            break;
+          }
+
+          _context3.next = 11;
+          return regeneratorRuntime.awrap(_article["default"].findAll({
+            where: {
+              description: _defineProperty({}, _sequelize.Op.iLike, "%".concat(keywords, "%"))
+            }
+          }));
+
+        case 11:
+          articles = _context3.sent;
+          _context3.next = 23;
+          break;
+
+        case 14:
+          if (!category) {
+            _context3.next = 20;
+            break;
+          }
+
+          _context3.next = 17;
+          return regeneratorRuntime.awrap(_article["default"].findAll({
+            where: {
+              categorie: category
+            }
+          }));
+
+        case 17:
+          articles = _context3.sent;
+          _context3.next = 23;
+          break;
+
+        case 20:
+          _context3.next = 22;
           return regeneratorRuntime.awrap(_article["default"].findAll());
 
-        case 3:
+        case 22:
           articles = _context3.sent;
+
+        case 23:
           count = articles.length;
           res.status(200).json({
             articles: articles,
             count: count
           });
-          _context3.next = 12;
+          _context3.next = 31;
           break;
 
-        case 8:
-          _context3.prev = 8;
+        case 27:
+          _context3.prev = 27;
           _context3.t0 = _context3["catch"](0);
           console.error(_context3.t0);
           res.status(500).json({
             message: 'Une erreur est survenue lors de la récupération des articles.'
           });
 
-        case 12:
+        case 31:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[0, 8]]);
+  }, null, null, [[0, 27]]);
 };
 /**
  * Récupère un article par son ID.
@@ -214,8 +281,10 @@ var getArticleById = function getArticleById(req, res) {
 
         case 6:
           res.status(200).json({
-            article: article
-          });
+            article: article,
+            photo: article.photo
+          }); // Ajouter la photo de l'article à la réponse
+
           _context4.next = 13;
           break;
 
@@ -246,7 +315,7 @@ var getArticleById = function getArticleById(req, res) {
 exports.getArticleById = getArticleById;
 
 var getArticlePhotoById = function getArticlePhotoById(req, res) {
-  var article, cachedPhoto, compressedPhoto;
+  var article;
   return regeneratorRuntime.async(function getArticlePhotoById$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
@@ -278,48 +347,25 @@ var getArticlePhotoById = function getArticlePhotoById(req, res) {
           }));
 
         case 8:
-          _context5.next = 10;
-          return regeneratorRuntime.awrap(cacheService.get(article.photo));
+          res.sendFile(article.photo); // Envoyer directement la photo au client
 
-        case 10:
-          cachedPhoto = _context5.sent;
-
-          if (!cachedPhoto) {
-            _context5.next = 13;
-            break;
-          }
-
-          return _context5.abrupt("return", res.sendFile(cachedPhoto));
-
-        case 13:
           _context5.next = 15;
-          return regeneratorRuntime.awrap(imageCompressionService.compress(article.photo));
-
-        case 15:
-          compressedPhoto = _context5.sent;
-          _context5.next = 18;
-          return regeneratorRuntime.awrap(cacheService.set(article.photo, compressedPhoto));
-
-        case 18:
-          // Envoi de la photo compressée au client
-          res.sendFile(compressedPhoto);
-          _context5.next = 25;
           break;
 
-        case 21:
-          _context5.prev = 21;
+        case 11:
+          _context5.prev = 11;
           _context5.t0 = _context5["catch"](0);
           console.error(_context5.t0);
           res.status(500).json({
             message: 'Une erreur est survenue lors de la récupération de la photo de l\'article.'
           });
 
-        case 25:
+        case 15:
         case "end":
           return _context5.stop();
       }
     }
-  }, null, null, [[0, 21]]);
+  }, null, null, [[0, 11]]);
 };
 /**
  * Met à jour un article (via HTTP PUT).
@@ -333,18 +379,19 @@ var getArticlePhotoById = function getArticlePhotoById(req, res) {
 exports.getArticlePhotoById = getArticlePhotoById;
 
 var updateArticlePut = function updateArticlePut(req, res) {
-  var _req$body2, nom, description, prix, quantite, errors, updatedFields;
+  var _req$body2, nom, description, quantite, statut, errors, updatedFields;
 
   return regeneratorRuntime.async(function updateArticlePut$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
           _context7.prev = 0;
-          _req$body2 = req.body, nom = _req$body2.nom, description = _req$body2.description, prix = _req$body2.prix, quantite = _req$body2.quantite;
+          _req$body2 = req.body, nom = _req$body2.nom, description = _req$body2.description, quantite = _req$body2.quantite;
+          statut = quantite >= 6;
           errors = (0, _expressValidator.validationResult)(req);
 
           if (errors.isEmpty()) {
-            _context7.next = 5;
+            _context7.next = 6;
             break;
           }
 
@@ -352,12 +399,12 @@ var updateArticlePut = function updateArticlePut(req, res) {
             errors: errors.array()
           }));
 
-        case 5:
+        case 6:
           updatedFields = {
             nom: nom,
             description: description,
-            prix: prix,
-            quantite: quantite
+            quantite: quantite,
+            statut: statut
           };
           upload.single('photo')(req, res, function handleUploadError(err) {
             var article;
@@ -423,23 +470,23 @@ var updateArticlePut = function updateArticlePut(req, res) {
               }
             });
           });
-          _context7.next = 13;
+          _context7.next = 14;
           break;
 
-        case 9:
-          _context7.prev = 9;
+        case 10:
+          _context7.prev = 10;
           _context7.t0 = _context7["catch"](0);
           console.error(_context7.t0);
           res.status(500).json({
             message: 'Une erreur est survenue lors de la mise à jour de l\'article.'
           });
 
-        case 13:
+        case 14:
         case "end":
           return _context7.stop();
       }
     }
-  }, null, null, [[0, 9]]);
+  }, null, null, [[0, 10]]);
 };
 /**
  * Met à jour un article (via HTTP PATCH).
@@ -453,18 +500,19 @@ var updateArticlePut = function updateArticlePut(req, res) {
 exports.updateArticlePut = updateArticlePut;
 
 var updateArticlePatch = function updateArticlePatch(req, res) {
-  var _req$body3, nom, description, prix, quantite, errors, updatedFields;
+  var _req$body3, nom, description, quantite, statut, errors, updatedFields;
 
   return regeneratorRuntime.async(function updateArticlePatch$(_context9) {
     while (1) {
       switch (_context9.prev = _context9.next) {
         case 0:
           _context9.prev = 0;
-          _req$body3 = req.body, nom = _req$body3.nom, description = _req$body3.description, prix = _req$body3.prix, quantite = _req$body3.quantite;
+          _req$body3 = req.body, nom = _req$body3.nom, description = _req$body3.description, quantite = _req$body3.quantite;
+          statut = quantite >= 6;
           errors = (0, _expressValidator.validationResult)(req);
 
           if (errors.isEmpty()) {
-            _context9.next = 5;
+            _context9.next = 6;
             break;
           }
 
@@ -472,12 +520,12 @@ var updateArticlePatch = function updateArticlePatch(req, res) {
             errors: errors.array()
           }));
 
-        case 5:
+        case 6:
           updatedFields = {
             nom: nom,
             description: description,
-            prix: prix,
-            quantite: quantite
+            quantite: quantite,
+            statut: statut
           };
           upload.single('photo')(req, res, function handleUploadError(err) {
             var article;
@@ -543,23 +591,23 @@ var updateArticlePatch = function updateArticlePatch(req, res) {
               }
             });
           });
-          _context9.next = 13;
+          _context9.next = 14;
           break;
 
-        case 9:
-          _context9.prev = 9;
+        case 10:
+          _context9.prev = 10;
           _context9.t0 = _context9["catch"](0);
           console.error(_context9.t0);
           res.status(500).json({
             message: 'Une erreur est survenue lors de la mise à jour de l\'article.'
           });
 
-        case 13:
+        case 14:
         case "end":
           return _context9.stop();
       }
     }
-  }, null, null, [[0, 9]]);
+  }, null, null, [[0, 10]]);
 };
 /**
  * Supprime un article.
@@ -643,7 +691,7 @@ var getArticleCount = function getArticleCount(req, res) {
 
         case 3:
           count = _context11.sent;
-          res.status(200).json({
+          res.json({
             count: count
           });
           _context11.next = 11;
@@ -664,5 +712,108 @@ var getArticleCount = function getArticleCount(req, res) {
     }
   }, null, null, [[0, 7]]);
 };
+/**
+ * Recherche des articles par nom, mots clés ou catégorie.
+ *
+ * @param {Object} req - Requête HTTP
+ * @param {Object} res - Réponse HTTP
+ * @returns {Object} - Liste des articles correspondants à la recherche
+ */
+
 
 exports.getArticleCount = getArticleCount;
+
+var searchArticles = function searchArticles(req, res) {
+  var _req$query2, search, keywords, category, articles, count;
+
+  return regeneratorRuntime.async(function searchArticles$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.prev = 0;
+          _req$query2 = req.query, search = _req$query2.search, keywords = _req$query2.keywords, category = _req$query2.category;
+
+          if (!search) {
+            _context12.next = 8;
+            break;
+          }
+
+          _context12.next = 5;
+          return regeneratorRuntime.awrap(_article["default"].findAll({
+            where: {
+              nom: _defineProperty({}, _sequelize.Op.iLike, "%".concat(search, "%"))
+            }
+          }));
+
+        case 5:
+          articles = _context12.sent;
+          _context12.next = 21;
+          break;
+
+        case 8:
+          if (!keywords) {
+            _context12.next = 14;
+            break;
+          }
+
+          _context12.next = 11;
+          return regeneratorRuntime.awrap(_article["default"].findAll({
+            where: {
+              description: _defineProperty({}, _sequelize.Op.iLike, "%".concat(keywords, "%"))
+            }
+          }));
+
+        case 11:
+          articles = _context12.sent;
+          _context12.next = 21;
+          break;
+
+        case 14:
+          if (!category) {
+            _context12.next = 20;
+            break;
+          }
+
+          _context12.next = 17;
+          return regeneratorRuntime.awrap(_article["default"].findAll({
+            where: {
+              categorie: category
+            }
+          }));
+
+        case 17:
+          articles = _context12.sent;
+          _context12.next = 21;
+          break;
+
+        case 20:
+          return _context12.abrupt("return", res.status(400).json({
+            message: 'Veuillez fournir un terme de recherche valide.'
+          }));
+
+        case 21:
+          count = articles.length;
+          res.status(200).json({
+            articles: articles,
+            count: count
+          });
+          _context12.next = 29;
+          break;
+
+        case 25:
+          _context12.prev = 25;
+          _context12.t0 = _context12["catch"](0);
+          console.error(_context12.t0);
+          res.status(500).json({
+            message: 'Une erreur est survenue lors de la recherche des articles.'
+          });
+
+        case 29:
+        case "end":
+          return _context12.stop();
+      }
+    }
+  }, null, null, [[0, 25]]);
+};
+
+exports.searchArticles = searchArticles;

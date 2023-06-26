@@ -1,5 +1,6 @@
 import { validationResult } from 'express-validator';
 import Article from '../models/article.js';
+import { Op } from 'sequelize';
 import multer from 'multer';
 
 const storage = multer.diskStorage({
@@ -42,8 +43,9 @@ export const createArticle = async (req, res) => {
         return res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'article.', error: err.message });
       }
 
-      const { nom, description, prix, quantite } = req.body;
+      const { nom, description, quantite } = req.body;
       let photo = req.file ? req.file.path : null;
+      const statut = quantite >= 6;
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -54,7 +56,9 @@ export const createArticle = async (req, res) => {
         nom,
         description,
         quantite,
-        photo
+        photo,
+        statut,
+        dateAjout: new Date() // Utilisation de la date actuelle pour la date de création de l'article
       });
 
       res.status(201).json({ article: nouvelArticle, photo });
@@ -74,7 +78,35 @@ export const createArticle = async (req, res) => {
  */
 export const getArticles = async (req, res) => {
   try {
-    const articles = await Article.findAll();
+    const { search, keywords, category } = req.query;
+    let articles;
+
+    if (search) {
+      articles = await Article.findAll({
+        where: {
+          nom: {
+            [Op.iLike]: `%${search}%`
+          }
+        }
+      });
+    } else if (keywords) {
+      articles = await Article.findAll({
+        where: {
+          description: {
+            [Op.iLike]: `%${keywords}%`
+          }
+        }
+      });
+    } else if (category) {
+      articles = await Article.findAll({
+        where: {
+          categorie: category
+        }
+      });
+    } else {
+      articles = await Article.findAll();
+    }
+
     const count = articles.length;
 
     res.status(200).json({ articles, count });
@@ -99,7 +131,7 @@ export const getArticleById = async (req, res) => {
       return res.status(404).json({ message: 'Article non trouvé.' });
     }
 
-    res.status(200).json({ article });
+    res.status(200).json({ article, photo: article.photo }); // Ajouter la photo de l'article à la réponse
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de l\'article.' });
@@ -125,20 +157,7 @@ export const getArticlePhotoById = async (req, res) => {
       return res.status(404).json({ message: 'La photo de l\'article n\'existe pas.' });
     }
 
-    // Implémentation de la mise en cache des photos
-    const cachedPhoto = await cacheService.get(article.photo);
-    if (cachedPhoto) {
-      return res.sendFile(cachedPhoto);
-    }
-
-    // Implémentation de la compression des images
-    const compressedPhoto = await imageCompressionService.compress(article.photo);
-
-    // Implémentation de la mise en cache des photos (stockage en cache)
-    await cacheService.set(article.photo, compressedPhoto);
-
-    // Envoi de la photo compressée au client
-    res.sendFile(compressedPhoto);
+    res.sendFile(article.photo); // Envoyer directement la photo au client
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de la photo de l\'article.' });
@@ -154,7 +173,8 @@ export const getArticlePhotoById = async (req, res) => {
  */
 export const updateArticlePut = async (req, res) => {
   try {
-    const { nom, description, prix, quantite } = req.body;
+    const { nom, description, quantite } = req.body;
+    const statut = quantite >= 6;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -164,8 +184,8 @@ export const updateArticlePut = async (req, res) => {
     const updatedFields = {
       nom,
       description,
-      prix,
-      quantite
+      quantite,
+      statut
     };
 
     upload.single('photo')(req, res, async function handleUploadError(err) {
@@ -204,7 +224,8 @@ export const updateArticlePut = async (req, res) => {
  */
 export const updateArticlePatch = async (req, res) => {
   try {
-    const { nom, description, prix, quantite } = req.body;
+    const { nom, description, quantite } = req.body;
+    const statut = quantite >= 6;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -214,8 +235,8 @@ export const updateArticlePatch = async (req, res) => {
     const updatedFields = {
       nom,
       description,
-      prix,
-      quantite
+      quantite,
+      statut
     };
 
     upload.single('photo')(req, res, async function handleUploadError(err) {
@@ -280,9 +301,56 @@ export const getArticleCount = async (req, res) => {
   try {
     const count = await Article.count();
 
-    res.status(200).json({ count });
+    res.json({ count });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors du comptage des articles.' });
+  }
+};
+
+/**
+ * Recherche des articles par nom, mots clés ou catégorie.
+ *
+ * @param {Object} req - Requête HTTP
+ * @param {Object} res - Réponse HTTP
+ * @returns {Object} - Liste des articles correspondants à la recherche
+ */
+export const searchArticles = async (req, res) => {
+  try {
+    const { search, keywords, category } = req.query;
+    let articles;
+
+    if (search) {
+      articles = await Article.findAll({
+        where: {
+          nom: {
+            [Op.iLike]: `%${search}%`
+          }
+        }
+      });
+    } else if (keywords) {
+      articles = await Article.findAll({
+        where: {
+          description: {
+            [Op.iLike]: `%${keywords}%`
+          }
+        }
+      });
+    } else if (category) {
+      articles = await Article.findAll({
+        where: {
+          categorie: category
+        }
+      });
+    } else {
+      return res.status(400).json({ message: 'Veuillez fournir un terme de recherche valide.' });
+    }
+
+    const count = articles.length;
+
+    res.status(200).json({ articles, count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Une erreur est survenue lors de la recherche des articles.' });
   }
 };

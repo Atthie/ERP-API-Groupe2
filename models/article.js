@@ -1,6 +1,7 @@
 'use strict';
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/database.js';
+import User from './users.js';
 
 class Article extends Model {}
 
@@ -16,11 +17,36 @@ Article.init(
     },
     quantite: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     photo: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    statut: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: User,
+        key: 'id',
+      },
     },
   },
   {
@@ -28,5 +54,7 @@ Article.init(
     modelName: 'Article',
   }
 );
+
+Article.belongsTo(User, { foreignKey: 'userId' });
 
 export default Article;

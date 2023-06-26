@@ -28,6 +28,6 @@ router["delete"]("/:id", _articleController.deleteArticle); // Récupérer la ph
 
 router.get("/:id/photo", _articleController.getArticlePhotoById); // Compter le nombre total d'articles
 
-router.get("/count", _articleController.getArticleCount);
+router.get("/articles/count", _articleController.getArticleCount);
 var _default = router;
 exports["default"] = _default;
