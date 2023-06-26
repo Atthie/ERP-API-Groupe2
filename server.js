@@ -23,7 +23,8 @@ import searchArticleRoutes from './routes/RouteSearchArticle.js';
 import Article from './models/article.js';
 import UserAttente from "./routes/RouteGetUserAttente.js"
 import CountRole from "./routes/RouteCountRole.js"
-
+import DemandeCotation from "./routes/cotation/RouteDemandeCotation.js";
+import DemandeCotationModel from "./models/demandeCotation.js"
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
@@ -43,6 +44,11 @@ app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);
 
 app.use('/articles', article);
+
+//Cotation
+app.use('/demandeCotation', DemandeCotation);
+
+
 app.use('/inscription',inscription);
 app.use('/inscriptionEM',inscriptionEM);
 app.use('/user',user);
@@ -53,7 +59,7 @@ app.use('/articles', searchArticleRoutes);
 await User.sync();
 await Entreprise.sync();
 await Article.sync();
-
+await DemandeCotationModel.sync(),
 
 app.listen(5000, () => {
   console.log("le serveur tourne sur le port 5000");
