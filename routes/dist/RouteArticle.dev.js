@@ -16,9 +16,7 @@ var router = _express["default"].Router(); // Créer un nouvel article
 
 router.post("/", _articleController.createArticle); // Récupérer tous les articles
 
-router.get("/", _articleController.getArticles);
-router.get("/uploads/photo", _articleController.getArticlePhotoById); // "/articles/:id/photo"
-// Récupérer un article spécifique par son ID
+router.get("/", _articleController.getArticles); // Récupérer un article spécifique par son ID
 
 router.get("/:id", _articleController.getArticleById); // Mettre à jour un article spécifique par son ID en utilisant le verbe PUT
 
@@ -26,21 +24,10 @@ router.put("/:id", _articleController.updateArticlePut); // Mettre à jour un ar
 
 router.patch("/:id", _articleController.updateArticlePatch); // Supprimer un article spécifique par son ID
 
-router["delete"]("/:id", _articleController.deleteArticle);
-var _default = router; // import express from "express";
-// import { createArticle, getArticles, getArticleById, updateArticle, deleteArticle } from "../controllers/articleController.js";
-// module.exports  = (app) => {
-//     const router = require('express').Router()
-// // Créer un nouvel article
-// app.post("/articles", createArticle);
-// // Récupérer tous les articles
-// app.get("/articles", getArticles);
-// // Récupérer un article spécifique par son ID
-// app.get("/articles/:id", getArticleById);
-// //Mettre à jour un article spécifique par son ID
-// app.put("/articles/:id", updateArticle);
-// // Supprimer un article spécifique par son ID
-// app.delete("/articles/:id", deleteArticle);
-// }
+router["delete"]("/:id", _articleController.deleteArticle); // Récupérer la photo d'un article par son ID
 
+router.get("/:id/photo", _articleController.getArticlePhotoById); // Compter le nombre total d'articles
+
+router.get("/count", _articleController.getArticleCount);
+var _default = router;
 exports["default"] = _default;
