@@ -3,6 +3,6 @@ import { getAllDemandeCotation } from "../../controllers/DemandeCotationControll
 
 const router = express.Router();
 
-router.post("", getAllDemandeCotation);
+router.get("", getAllDemandeCotation);
 
 export default router;

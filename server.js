@@ -23,6 +23,7 @@ import searchArticleRoutes from './routes/RouteSearchArticle.js';
 import Article from './models/article.js';
 import UserAttente from "./routes/RouteGetUserAttente.js"
 import CountRole from "./routes/RouteCountRole.js"
+import GetDemandeCotation from "./routes/cotation/RoutegetDemandeCotation.js";
 import DemandeCotation from "./routes/cotation/RouteDemandeCotation.js";
 import DemandeCotationModel from "./models/demandeCotation.js"
 app.use(express.urlencoded({ extended: true }));
@@ -47,6 +48,7 @@ app.use('/articles', article);
 
 //Cotation
 app.use('/demandeCotation', DemandeCotation);
+app.use('/getdemandeCotation', GetDemandeCotation);
 
 
 app.use('/inscription',inscription);
