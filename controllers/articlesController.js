@@ -1,63 +1,50 @@
-// Importez le modèle Article
-const { Article } = require('../models');
-// Importez la bibliothèque multer pour gérer les téléchargements de fichiers
-const multer = require('multer');
+const Article = require('../models/articleModel');
 
-// Configurez le stockage des fichiers avec multer
+// Middleware pour le téléchargement de fichier
+const multer = require('multer');
+const path = require('path');
+
+// Définir le stockage des fichiers
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Définissez le répertoire de destination des fichiers
-    cb(null, 'chemin/vers/votre/repertoire');
+    cb(null, 'public/images'); // Spécifiez le répertoire de destination des images
   },
   filename: function (req, file, cb) {
-    // Générez un nom de fichier unique
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    // Utilisez le nom de fichier d'origine avec un suffixe unique
-    cb(null, file.originalname + '-' + uniqueSuffix);
+    const fileExtension = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + fileExtension); // Spécifiez le nom du fichier
   }
 });
 
-// Initialisez multer avec la configuration de stockage
+// Configuration de l'upload de fichier avec le stockage défini
 const upload = multer({ storage: storage });
 
-// Définissez la fonction du contrôleur pour l'ajout d'un article
-const createArticle = async (req, res) => {
+// Méthode de création d'un article
+exports.createArticle = async (req, res) => {
   try {
-    // Récupérez les données de la requête
-    const { nom, description, quantite, statut, date, userId } = req.body;
+    const { nom, description, quantite, date, userId } = req.body;
 
     // Vérifiez si un fichier a été téléchargé
-    if (!req.file) {
-      return res.status(400).json({ message: 'Veuillez télécharger une photo.' });
+    let photo = null;
+    if (req.file) {
+      photo = req.file.filename;
     }
 
-    // Récupérez le chemin du fichier téléchargé
-    const photo = req.file.path;
-
-    // Créez l'article dans la base de données
+    // Créez un nouvel article dans la base de données
     const article = await Article.create({
       nom,
       description,
       quantite,
       photo,
-      statut,
       date,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      userId,
+      userId
     });
 
-    // Répondez avec l'article créé
-    res.status(201).json({ article });
+    res.status(201).json({ message: 'Article ajouté avec succès', article });
   } catch (error) {
-    // Gérez les erreurs
-    console.error('Erreur lors de la création de l\'article:', error);
-    res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'article.' });
+    res.status(500).json({ message: 'Une erreur est survenue lors de l\'ajout de l\'article', error });
   }
 };
 
-// Exportez la fonction du contrôleur
-module.exports = {
-  createArticle,
-  upload.single('photo') // Middleware pour le téléchargement de fichier
-};
+// Exportez le middleware d'upload de fichier
+exports.upload = upload;

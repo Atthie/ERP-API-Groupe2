@@ -57,6 +57,23 @@ export const deleteDemandeCotation = async (req, res) => {
   }
 };
 
+const getLastCreatedElement = async (req, res) => {
+  try {
+    const lastElement = await DemandeCotation.findOne({
+      order: [['createdAt', 'DESC']], // Tri par ordre décroissant selon la date de création
+    });
+
+    if (!lastElement) {
+      return res.status(404).json({ message: "Aucun élément trouvé." });
+    }
+
+    return res.status(200).json(lastElement);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Une erreur s'est produite lors de la récupération du dernier élément créé." });
+  }
+};
+
 
 
 
