@@ -24,8 +24,7 @@ Article.init(
       allowNull: true,
     },
     statut: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
+      type: DataTypes.STRING,
       defaultValue: false,
     },
     date: {
