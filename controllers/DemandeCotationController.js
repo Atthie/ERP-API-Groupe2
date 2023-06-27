@@ -39,6 +39,25 @@ export const getAllDemandeCotation = async (req, res) => {
   }
 };
 
+export const deleteDemandeCotation = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const demandeCotation = await DemandeCotation.findByPk(id);
+    if (!demandeCotation) {
+      return res.status(404).json({ error: 'Demande de cotation non trouvée' });
+    }
+
+    await demandeCotation.destroy();
+
+    return res.status(200).json({ message: 'Demande de cotation supprimée avec succès' });
+  } catch (error) {
+    console.error('Une erreur est survenue lors de la suppression de la demande de cotation :', error);
+    return res.status(500).json({ error: 'Une erreur est survenue lors de la suppression de la demande de cotation' });
+  }
+};
+
+
 
 
 
