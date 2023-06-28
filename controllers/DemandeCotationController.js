@@ -57,7 +57,7 @@ export const deleteDemandeCotation = async (req, res) => {
   }
 };
 
-const getLastCreatedElement = async (req, res) => {
+export const getLastCreatedElement = async (req, res) => {
   try {
     const lastElement = await DemandeCotation.findOne({
       order: [['createdAt', 'DESC']], // Tri par ordre décroissant selon la date de création
