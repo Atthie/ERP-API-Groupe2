@@ -3,6 +3,7 @@ import validator from 'validator';
 import transporter from "../config/emailConfig.js";
 import bcrypt from 'bcrypt';
 import DemandeCotation from '../models/demandeCotation.js';
+import ArticleCotation from "../models/articleCotation.js";
 
 export const DemandeCotationController = async (req, res) => {
     const { etat,userId, description, dateFin } = req.body;
@@ -11,7 +12,6 @@ export const DemandeCotationController = async (req, res) => {
         return res.status(400).json({ error: "Le champ 'nom' est requis." });
       }
     }
-    
     if (validator.isEmpty(description)) {
       return res.status(400).json({ error: "Le champ 'description' est requis." });
     }
@@ -25,7 +25,6 @@ export const DemandeCotationController = async (req, res) => {
       dateFin,
       userId
     });
-   
     res.status(201).json(dm);
   
 };
@@ -56,6 +55,61 @@ export const deleteDemandeCotation = async (req, res) => {
     return res.status(500).json({ error: 'Une erreur est survenue lors de la suppression de la demande de cotation' });
   }
 };
+
+export const getLastCreatedElement = async (req, res) => {
+  try {
+    const lastElement = await DemandeCotation.findOne({
+      order: [['createdAt', 'DESC']], // Tri par ordre décroissant selon la date de création
+    });
+    if (!lastElement) {
+      return res.status(404).json({ message: "Aucun élément trouvé." });
+    }
+    return res.status(200).json(lastElement);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Une erreur s'est produite lors de la récupération du dernier élément créé." });
+  }
+};
+
+export const getDemandeCotationById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const demandeCotation = await DemandeCotation.findByPk(id);
+   
+    if (!demandeCotation) {
+      return res.status(404).json({ error: 'Demande de cotation introuvable' });
+    }
+
+    return res.json(demandeCotation);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Erreur lors de la récupération de la demande de cotation' });
+  }
+};
+
+
+export const publierDemandeCotation = async (req, res) => {
+  const { id } = req.params; 
+
+  try {
+    const demandeCotation = await DemandeCotation.findByPk(id);
+
+    if (!demandeCotation) {
+      return res.status(404).json({ message: "La demande de cotation n'a pas été trouvée." });
+    }
+
+    demandeCotation.etat = 'publié';
+
+    await demandeCotation.save();
+
+    return res.status(200).json({ message: 'La demande de cotation a été publiée avec succès.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Une erreur est survenue lors de la modification de la demande de cotation.', error: error.message });
+  }
+};
+
+
 
 
 
