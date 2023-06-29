@@ -15,20 +15,22 @@ import GetEMId from './routes/RouteGetEMId.js'
 import Entreprise from "./models/entreprises.js";
 import User from "./models/users.js";
 import DeleteEM from "./routes/RouteDeleteEM.js"
-import UserEM from "./routes/RouteUserEM.js"
+import UserEM from "./routes/RouteUserEM.js";
 import article from './routes/RouteArticle.js';
+import client from './routes/RouteClient.js';
 import searchArticleRoutes from './routes/RouteSearchArticle.js';
 
 
 import Article from './models/article.js';
-import UserAttente from "./routes/RouteGetUserAttente.js"
-import CountRole from "./routes/RouteCountRole.js"
+import Client from './models/client.js';
+import UserAttente from "./routes/RouteGetUserAttente.js";
+import CountRole from "./routes/RouteCountRole.js";
 import GetDemandeCotation from "./routes/cotation/RoutegetDemandeCotation.js";
 import DemandeCotation from "./routes/cotation/RouteDemandeCotation.js";
-import DemandeCotationModel from "./models/demandeCotation.js"
+import DemandeCotationModel from "./models/demandeCotation.js";
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 app.use(passport.initialize());
 app.use('/AjoutEM',AjoutEM);
 app.use('/CountRole',CountRole);
@@ -45,7 +47,7 @@ app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);
 
 app.use('/articles', article);
-
+app.use('/clients', client);
 //Cotation
 app.use('/demandeCotation', DemandeCotation);
 app.use('/getdemandeCotation', GetDemandeCotation);
@@ -58,13 +60,18 @@ app.use('/user',user);
 
 app.use('/connexion',connexion);
 app.use('/articles', searchArticleRoutes);
-await User.sync();
-await Entreprise.sync();
-await Article.sync();
-await DemandeCotationModel.sync(),
 
-app.listen(5000, () => {
-  console.log("le serveur tourne sur le port 5000");
+async function syncModels() {
+  await User.sync();
+  await Entreprise.sync();
+  await Article.sync();
+  await Client.sync();
+  await DemandeCotationModel.sync()
+};
+
+
+app.listen(4000, () => {
+  console.log("le serveur tourne sur le port 4000");
 });
 
 

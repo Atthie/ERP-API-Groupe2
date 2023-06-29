@@ -50,7 +50,7 @@ var Client = _database["default"].define('Client', {
   },
   userId: {
     type: _sequelize.DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: _users["default"],
       key: 'id'

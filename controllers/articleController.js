@@ -354,3 +354,6 @@ export const searchArticles = async (req, res) => {
     res.status(500).json({ message: 'Une erreur est survenue lors de la recherche des articles.' });
   }
 };
+
+
+
