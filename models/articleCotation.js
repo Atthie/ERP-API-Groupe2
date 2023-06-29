@@ -6,10 +6,8 @@ import DemandeCotation from './demandeCotation.js';
 
 
 class ArticleCotation extends Model {}
-
 ArticleCotation.init(
   {
-   
     quantite: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -36,9 +34,9 @@ ArticleCotation.init(
     modelName: 'ArticleCotation',
   }
 );
+ArticleCotation.belongsTo(DemandeCotation, { foreignKey: 'dmId' });
 
 ArticleCotation.belongsTo(Article, { foreignKey: 'articleId' });
-ArticleCotation.belongsTo(DemandeCotation, { foreignKey: 'dmId' });
 
 
 export default ArticleCotation;
