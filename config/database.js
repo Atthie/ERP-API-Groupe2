@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-const db = new Sequelize("Erp", "postgres", "admin", {
+const db = new Sequelize("Erp", "postgres", "mamita", {
   host: "localhost",
   dialect: "postgres"
 });

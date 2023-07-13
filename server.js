@@ -17,9 +17,11 @@ import User from "./models/users.js";
 import DeleteEM from "./routes/RouteDeleteEM.js"
 import UserEM from "./routes/RouteUserEM.js"
 import article from './routes/RouteArticle.js';
+import production from './routes/RouteProduction.js';
 import searchArticleRoutes from './routes/RouteSearchArticle.js';
 
 import Article from './models/article.js';
+import Production from "./models/production.js";
 import UserAttente from "./routes/RouteGetUserAttente.js"
 import CountRole from "./routes/RouteCountRole.js"
 
@@ -56,6 +58,7 @@ app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);
 
 app.use('/articles', article);
+app.use('/production', production);
 
 //Cotation
 app.use('/demandeCotation', DemandeCotation);
@@ -82,6 +85,8 @@ await Entreprise.sync();
 await Article.sync();
 await DemandeCotationModel.sync(),
 await ArticleCotation.sync(),
+await Production.sync(),
+
 
 app.listen(5000, () => {
   console.log("le serveur tourne sur le port 5000");
