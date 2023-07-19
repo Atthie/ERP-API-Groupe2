@@ -4,7 +4,11 @@ import sequelize from '../config/database.js';
 class Facture extends Model {}
 
 Facture.init(
-  {
+  { 
+    nom: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     entreprise: {
       type: DataTypes.STRING,
       allowNull: false,

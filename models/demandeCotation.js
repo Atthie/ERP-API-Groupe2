@@ -2,7 +2,11 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 import User from './users.js';
 
-const DemandeCotation = sequelize.define('DemandeCotation', {
+const DemandeCotationModel = sequelize.define('DemandeCotation', {
+  nom: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   description: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -12,8 +16,12 @@ const DemandeCotation = sequelize.define('DemandeCotation', {
     allowNull: false,
   },
   dateFin: {
-    type: DataTypes.STRING,
+    type: DataTypes.DATE,
     allowNull: true,
+  },
+  duree: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -25,7 +33,7 @@ const DemandeCotation = sequelize.define('DemandeCotation', {
   },
   userId: { 
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: User,
       key: 'id',
@@ -33,7 +41,6 @@ const DemandeCotation = sequelize.define('DemandeCotation', {
   },
 });
 
+DemandeCotationModel.belongsTo(User, { foreignKey: 'userId' }); 
 
-DemandeCotation.belongsTo(User, { foreignKey: 'userId' }); 
-
-export default DemandeCotation;
+export default DemandeCotationModel;

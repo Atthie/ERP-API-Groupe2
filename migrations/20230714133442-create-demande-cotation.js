@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Entreprises', {
+    await queryInterface.createTable('DemandeCotations', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,8 +15,23 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      email: {
+      etat: {
         type: Sequelize.STRING
+      },
+      dateFin: {
+        type: Sequelize.DATE
+      },
+      duree: {
+        type: Sequelize.INTEGER
+      },
+      createdAt: {
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        type: Sequelize.DATE
+      },
+      userId: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -28,8 +43,7 @@ module.exports = {
       }
     });
   },
-  
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Entreprises');
+    await queryInterface.dropTable('DemandeCotations');
   }
 };

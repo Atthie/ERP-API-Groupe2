@@ -46,9 +46,7 @@ var _RouteGetUserAttente = _interopRequireDefault(require("./routes/RouteGetUser
 
 var _RouteCountRole = _interopRequireDefault(require("./routes/RouteCountRole.js"));
 
-var _RoutegetDemandeCotation = _interopRequireDefault(require("./routes/cotation/RoutegetDemandeCotation.js"));
-
-var _RouteDemandeCotation = _interopRequireDefault(require("./routes/cotation/RouteDemandeCotation.js"));
+var _RouteDemandeCotation = _interopRequireDefault(require("./routes/RouteDemandeCotation.js"));
 
 var _demandeCotation = _interopRequireDefault(require("./models/demandeCotation.js"));
 
@@ -73,8 +71,7 @@ app.use('/DeleteEM', _RouteDeleteEM["default"]);
 app.use('/articles', _RouteArticle["default"]);
 app.use('/clients', _RouteClient["default"]); //Cotation
 
-app.use('/demandeCotation', _RouteDemandeCotation["default"]);
-app.use('/getdemandeCotation', _RoutegetDemandeCotation["default"]);
+app.use('/demandeCotations', _RouteDemandeCotation["default"]);
 app.use('/inscription', _RouteInscription["default"]);
 app.use('/inscriptionEM', _RouteInvitationEM["default"]);
 app.use('/user', _RouteUser["default"]);

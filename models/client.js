@@ -27,7 +27,7 @@ const Client = sequelize.define('Client', {
   },
   statut: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   createdAt: {
       type: DataTypes.DATE,

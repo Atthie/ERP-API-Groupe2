@@ -25,8 +25,7 @@ import Article from './models/article.js';
 import Client from './models/client.js';
 import UserAttente from "./routes/RouteGetUserAttente.js";
 import CountRole from "./routes/RouteCountRole.js";
-import GetDemandeCotation from "./routes/cotation/RoutegetDemandeCotation.js";
-import DemandeCotation from "./routes/cotation/RouteDemandeCotation.js";
+import DemandeCotation from "./routes/RouteDemandeCotation.js";
 import DemandeCotationModel from "./models/demandeCotation.js";
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -49,8 +48,8 @@ app.use('/DeleteEM',DeleteEM);
 app.use('/articles', article);
 app.use('/clients', client);
 //Cotation
-app.use('/demandeCotation', DemandeCotation);
-app.use('/getdemandeCotation', GetDemandeCotation);
+app.use('/demandeCotations', DemandeCotation);
+
 
 
 app.use('/inscription',inscription);
