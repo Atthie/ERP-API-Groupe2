@@ -1,35 +1,31 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, INTEGER } from 'sequelize';
 import sequelize from '../config/database.js';
 import User from './users.js';
 
-const Production = sequelize.define('Production', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  Produit: {
+const PlanProductions = sequelize.define('PlanProductions', {
+ 
+  nom: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  Ressource: {
+  ressource: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  Quantite: {
+  // quantite: {
+  //   type: DataTypes.INTEGER,
+  //   allowNull: false
+  // },
+  etat: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  Etat: {
-    type: DataTypes.STRING,
+  delai: {
+    type: DataTypes.DATE,
     allowNull: false
   },
-  Delai: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  Cout: {
+  cout: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -41,18 +37,8 @@ const Production = sequelize.define('Production', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'id'
-    }
-  }
+ 
 });
 
-// Définition de la relation entre User et Client
-User.hasMany(Production, { foreignKey: 'userId' });
-Production.belongsTo(User, { foreignKey: 'userId' });
 
-export default Production;
+export default PlanProductions;

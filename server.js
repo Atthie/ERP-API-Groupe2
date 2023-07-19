@@ -38,7 +38,9 @@ import AddArticleCotation from "./routes/cotation/RouteArticleCotation.js";
 
 import GetAllArticles from "./routes/article/RouteGetArticles.js"
 import ArticleCotation from "./models/articleCotation.js";
-
+import  bodyParser from 'body-parser';
+import router from "./routes/RouteProduction.js";
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors())
@@ -58,7 +60,7 @@ app.use('/UserEM',UserEM);
 app.use('/DeleteEM',DeleteEM);
 
 app.use('/articles', article);
-app.use('/production', production);
+app.use('/productions', production);
 
 //Cotation
 app.use('/demandeCotation', DemandeCotation);
@@ -69,6 +71,8 @@ app.use('/getbyiddemandeCotation', GetByIdDemandeCotation);
 app.use('/publier', PublierDemandeCotation);
 
 
+
+
 app.use('/addArticleCotation', AddArticleCotation);
 
 
@@ -76,6 +80,7 @@ app.use('/addArticleCotation', AddArticleCotation);
 app.use('/inscription',inscription);
 app.use('/inscriptionEM',inscriptionEM);
 app.use('/user',user);
+app.use ('/Production',router)
 
 app.use('/getAllArticles',GetAllArticles)
 app.use('/connexion',connexion);

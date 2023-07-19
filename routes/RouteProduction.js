@@ -1,22 +1,13 @@
 import express from "express";
-import { createProduction, getProductions, getProductionById, updateProduction, deleteProduction} from "../controllers/productionController.js";
+import { Production, ReqProduction } from "../controllers/productionController.js";
+import {validationProduction} from "../middlewares/validationProduction.js"
+// import multer from "../middlewares/multer";
 
-const router = express.Router();
+const router = express.Router()
 
-// Créer un nouvel article
-router.post("/", createProduction);
+router.get("/",Production)
+// router.post("/enregistrer",ReqProduction)
 
-// Récupérer tous les articles
-router.get("/", getProductions);
+router.post("/enregistrer" , ReqProduction);
 
-// Récupérer un article spécifique par son ID
-router.get("/:id", getProductionById);
-
-// Mettre à jour un article spécifique par son ID en utilisant le verbe PUT
-router.put("/:id", updateProduction);
-
-// Supprimer un article spécifique par son ID
-router.delete("/:id", deleteProduction);
-
-
-export default router;
+export default router
