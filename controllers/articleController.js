@@ -5,7 +5,7 @@ import multer from 'multer';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads');
+    cb(null, 'uploads');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
@@ -131,7 +131,7 @@ export const getArticleById = async (req, res) => {
       return res.status(404).json({ message: 'Article non trouvé.' });
     }
 
-    res.status(200).json({ article, photo: article.photo }); // Ajouter la photo de l'article à la réponse
+    res.status(200).json({ article, photo: article.photo }); // Ajouter la photo de l'article à la réponse    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de l\'article.' });
@@ -354,3 +354,6 @@ export const searchArticles = async (req, res) => {
     res.status(500).json({ message: 'Une erreur est survenue lors de la recherche des articles.' });
   }
 };
+
+
+

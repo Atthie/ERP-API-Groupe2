@@ -19,7 +19,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var storage = _multer["default"].diskStorage({
   destination: function destination(req, file, cb) {
-    cb(null, './uploads');
+    cb(null, 'uploads');
   },
   filename: function filename(req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
@@ -283,7 +283,7 @@ var getArticleById = function getArticleById(req, res) {
           res.status(200).json({
             article: article,
             photo: article.photo
-          }); // Ajouter la photo de l'article à la réponse
+          }); // Ajouter la photo de l'article à la réponse    
 
           _context4.next = 13;
           break;

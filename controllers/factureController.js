@@ -22,6 +22,7 @@ export const createFacture = async (req, res) => {
     const totalTTC = totalHT + taxes;
 
     const nouvelleFacture = await Facture.create({
+      nom,
       entreprise,
       description,
       articles,
@@ -104,7 +105,7 @@ export const updateFacture = async (req, res) => {
     const totalHT = articles.reduce((total, article) => total + article.quantite * article.prixUnitaire, 0);
     const taxes = totalHT * 0.2;
     const totalTTC = totalHT + taxes;
-
+    facture.nom = nom;
     facture.entreprise = entreprise;
     facture.description = description;
     facture.articles = articles;

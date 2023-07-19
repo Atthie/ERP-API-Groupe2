@@ -40,6 +40,10 @@ function (_Model) {
 }(_sequelize.Model);
 
 Facture.init({
+  nom: {
+    type: _sequelize.DataTypes.STRING,
+    allowNull: false
+  },
   entreprise: {
     type: _sequelize.DataTypes.STRING,
     allowNull: false

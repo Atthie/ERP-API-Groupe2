@@ -26,7 +26,7 @@ router.patch("/:id", _articleController.updateArticlePatch); // Supprimer un art
 
 router["delete"]("/:id", _articleController.deleteArticle); // Récupérer la photo d'un article par son ID
 
-router.get("/:id/photo", _articleController.getArticlePhotoById); // Compter le nombre total d'articles
+router.get("/:id/uploads", _articleController.getArticlePhotoById); // Compter le nombre total d'articles
 
 router.get("/articles/count", _articleController.getArticleCount);
 var _default = router;

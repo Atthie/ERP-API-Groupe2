@@ -27,7 +27,7 @@ const Client = sequelize.define('Client', {
   },
   statut: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   createdAt: {
       type: DataTypes.DATE,
@@ -39,7 +39,7 @@ const Client = sequelize.define('Client', {
   },
   userId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: User,
       key: 'id'

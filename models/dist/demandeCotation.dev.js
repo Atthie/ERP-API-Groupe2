@@ -13,32 +13,26 @@ var _users = _interopRequireDefault(require("./users.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var Client = _database["default"].define('Client', {
-  id: {
-    type: _sequelize.DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+var DemandeCotationModel = _database["default"].define('DemandeCotation', {
   nom: {
     type: _sequelize.DataTypes.STRING,
     allowNull: false
   },
-  email: {
-    type: _sequelize.DataTypes.STRING,
-    allowNull: false,
-    unique: true
-  },
-  entreprise: {
+  description: {
     type: _sequelize.DataTypes.STRING,
     allowNull: false
   },
-  adresse: {
+  etat: {
     type: _sequelize.DataTypes.STRING,
     allowNull: false
   },
-  statut: {
-    type: _sequelize.DataTypes.STRING,
+  dateFin: {
+    type: _sequelize.DataTypes.DATE,
     allowNull: true
+  },
+  duree: {
+    type: _sequelize.DataTypes.INTEGER,
+    allowNull: false
   },
   createdAt: {
     type: _sequelize.DataTypes.DATE,
@@ -56,15 +50,10 @@ var Client = _database["default"].define('Client', {
       key: 'id'
     }
   }
-}); // Définition de la relation entre User et Client
-
-
-_users["default"].hasMany(Client, {
-  foreignKey: 'userId'
 });
 
-Client.belongsTo(_users["default"], {
+DemandeCotationModel.belongsTo(_users["default"], {
   foreignKey: 'userId'
 });
-var _default = Client;
+var _default = DemandeCotationModel;
 exports["default"] = _default;

@@ -22,7 +22,7 @@ router.patch("/:id", updateArticlePatch);
 router.delete("/:id", deleteArticle);
 
 // Récupérer la photo d'un article par son ID
-router.get("/:id/photo", getArticlePhotoById);
+router.get("/:id/uploads", getArticlePhotoById);
 
 // Compter le nombre total d'articles
 router.get("/articles/count", getArticleCount);
