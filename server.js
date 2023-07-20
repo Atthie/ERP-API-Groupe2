@@ -37,7 +37,7 @@ import DeleteDM from "./routes/cotation/RouteSuppressionDM.js"
 import GetLastDemandeCotation from "./routes/cotation/RoutegetLastDemandeCotation.js";
 import GetByIdDemandeCotation from "./routes/cotation/RoutegetByIdDemandeCotation .js";
 import PublierDemandeCotation from "./routes/cotation/RoutePublierDM.js";
-
+import comptabilite from "./models/comptabilite.js";
 
 import AddArticleCotation from "./routes/cotation/RouteArticleCotation.js";
 
@@ -45,6 +45,10 @@ import GetAllArticles from "./routes/article/RouteGetArticles.js"
 import ArticleCotation from "./models/articleCotation.js";
 import  bodyParser from 'body-parser';
 import router from "./routes/RouteProduction.js";
+import routerCompte from "./routes/Routecomptabilite.js";
+
+
+
 app.use(bodyParser.json());
 =======
 import Client from './models/client.js';
@@ -87,12 +91,16 @@ app.use('/publier', PublierDemandeCotation);
 
 
 app.use('/addArticleCotation', AddArticleCotation);
+<<<<<<< HEAD
 =======
 app.use('/clients', client);
 //Cotation
 app.use('/demandeCotations', DemandeCotation);
 >>>>>>> 6fe4e1486dae252451c4b324872ed938c10141c5
 
+=======
+app.use('/', routerCompte)
+>>>>>>> a5bb99a (comptabilite)
 
 
 app.use('/inscription',inscription);
@@ -110,6 +118,7 @@ await Article.sync();
 await DemandeCotationModel.sync(),
 await ArticleCotation.sync(),
 await Production.sync(),
+await comptabilite.sync(),
 
 =======
 >>>>>>> 6fe4e1486dae252451c4b324872ed938c10141c5
