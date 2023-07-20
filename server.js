@@ -23,11 +23,10 @@ import searchArticleRoutes from './routes/RouteSearchArticle.js';
 
 import Article from './models/article.js';
 import Production from "./models/production.js";
-import UserAttente from "./routes/RouteGetUserAttente.js"
-import CountRole from "./routes/RouteCountRole.js"
 
-import GetDemandeCotation from "./routes/cotation/RoutegetDemandeCotation.js";
-import DemandeCotation from "./routes/cotation/RouteDemandeCotation.js";
+
+// import GetDemandeCotation from "./routes/cotation/RoutegetDemandeCotation.js";
+// import DemandeCotation from "./routes/cotation/RouteDemandeCotation.js";
 import DemandeCotationModel from "./models/demandeCotation.js"
 import DeleteDM from "./routes/cotation/RouteSuppressionDM.js"
 import GetLastDemandeCotation from "./routes/cotation/RoutegetLastDemandeCotation.js";
@@ -35,10 +34,10 @@ import GetByIdDemandeCotation from "./routes/cotation/RoutegetByIdDemandeCotatio
 import PublierDemandeCotation from "./routes/cotation/RoutePublierDM.js";
 import comptabilite from "./models/comptabilite.js";
 
-import AddArticleCotation from "./routes/cotation/RouteArticleCotation.js";
+// import AddArticleCotation from "./routes/cotation/RouteArticleCotation.js";
 
 import GetAllArticles from "./routes/article/RouteGetArticles.js"
-import ArticleCotation from "./models/articleCotation.js";
+// import ArticleCotation from "./models/articleCotation.js";
 import  bodyParser from 'body-parser';
 import router from "./routes/RouteProduction.js";
 import routerCompte from "./routes/Routecomptabilite.js";
@@ -49,8 +48,6 @@ app.use(bodyParser.json());
 import Client from './models/client.js';
 import UserAttente from "./routes/RouteGetUserAttente.js";
 import CountRole from "./routes/RouteCountRole.js";
-import DemandeCotation from "./routes/RouteDemandeCotation.js";
-import DemandeCotationModel from "./models/demandeCotation.js";
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
@@ -74,8 +71,8 @@ app.use('/articles', article);
 app.use('/productions', production);
 
 //Cotation
-app.use('/demandeCotation', DemandeCotation);
-app.use('/getdemandeCotation', GetDemandeCotation);
+// app.use('/demandeCotation', DemandeCotation);
+// app.use('/getdemandeCotation', GetDemandeCotation);
 app.use('/deleteDM', DeleteDM)
 app.use('/getlastdemandeCotation', GetLastDemandeCotation);
 app.use('/getbyiddemandeCotation', GetByIdDemandeCotation);
@@ -84,10 +81,10 @@ app.use('/publier', PublierDemandeCotation);
 
 
 
-app.use('/addArticleCotation', AddArticleCotation);
+// app.use('/addArticleCotation', AddArticleCotation);
 app.use('/clients', client);
 //Cotation
-app.use('/demandeCotations', DemandeCotation);
+// app.use('/demandeCotations', DemandeCotation);
 
 
 app.use('/', routerCompte)
@@ -105,9 +102,8 @@ app.use('/articles', searchArticleRoutes);
 
 
 
-await ArticleCotation.sync(),
-await Production.sync(),
-await comptabilite.sync(),
+
+
 
 
 async function syncModels() {
@@ -116,11 +112,13 @@ async function syncModels() {
   await Article.sync();
   await Client.sync();
   await DemandeCotationModel.sync()
+  await Production.sync(),
+  await comptabilite.sync()
 };
 
 
-app.listen(4000, () => {
-  console.log("le serveur tourne sur le port 4000");
+app.listen(5000, () => {
+  console.log("le serveur tourne sur le port 5000");
 });
 
 

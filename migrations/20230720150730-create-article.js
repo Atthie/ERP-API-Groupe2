@@ -15,10 +15,19 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      prix: {
-        type: Sequelize.FLOAT
-      },
       quantite: {
+        type: Sequelize.INTEGER
+      },
+      photo: {
+        type: Sequelize.STRING
+      },
+      statut: {
+        type: Sequelize.BOOLEAN
+      },
+      date: {
+        type: Sequelize.DATE
+      },
+      userId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

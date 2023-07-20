@@ -1,8 +1,8 @@
 import express from "express";
-import { publierDemandeCotation } from "../../controllers/DemandeCotationController.js";
+// import { publierDemandeCotation } from "../../controllers/DemandeCotationController.js";
 
 const router = express.Router();
 
-router.put("/:id", publierDemandeCotation);
+// router.put("/:id", publierDemandeCotation);
 
 export default router;
