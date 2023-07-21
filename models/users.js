@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import Entreprise from './entreprisesVendeur.js'; 
+import Entreprise from './entreprises.js'; 
 
 const User = sequelize.define('User', {
   username: {
@@ -11,13 +11,17 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  token: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  etat: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   idEntreprise: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Entreprise,
-      key: 'id',
-    },
+    allowNull: true, 
   },
   pwd: {
     type: DataTypes.STRING,
@@ -41,8 +45,5 @@ const User = sequelize.define('User', {
   },
 });
 
-User.associate = () => {
-  User.belongsTo(Entreprise, { foreignKey: 'idEntreprise' });
-};
 
 export default User;
